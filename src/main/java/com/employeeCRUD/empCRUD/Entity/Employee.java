@@ -1,6 +1,9 @@
 package com.employeeCRUD.empCRUD.Entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 @Table(name="emp_table")
@@ -25,19 +28,39 @@ public class Employee {
     private String phone;
     @Column(name="salary")
     private Double salary;
+
+
+//    @OneToMany(mappedBy = "employee",
+//            cascade = CascadeType.ALL)
+//        private List<Project> projects;
+
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<Project> projects;
+
+
     public Employee() {
     }
 
-    public Employee(Double salary, String phone, String position, String department, String organization, String email, String lastName, String firstName, Long id) {
-        this.salary = salary;
-        this.phone = phone;
-        this.position = position;
-        this.department = department;
-        this.organization = organization;
-        this.email = email;
-        this.lastName = lastName;
-        this.firstName = firstName;
+    public Employee(Long id, String firstName, String lastName, String email, String organization, String department, String position, String phone, Double salary, List<Project> projects) {
         this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.organization = organization;
+        this.department = department;
+        this.position = position;
+        this.phone = phone;
+        this.salary = salary;
+        this.projects = projects;
+    }
+
+    public List<Project> getProjects() {
+        return projects;
+    }
+
+    public void setProjects(List<Project> projects) {
+        this.projects = projects;
     }
 
     public Double getSalary() {
