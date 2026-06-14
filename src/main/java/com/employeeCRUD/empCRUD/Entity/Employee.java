@@ -30,9 +30,9 @@ public class Employee {
     private Double salary;
 
 
-//    @OneToMany(mappedBy = "employee",
-//            cascade = CascadeType.ALL)
-//        private List<Project> projects;
+    @OneToMany(mappedBy = "employee",
+            cascade = CascadeType.ALL)
+        private List<Job> jobs;
 
     @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
     @JsonManagedReference
@@ -42,17 +42,18 @@ public class Employee {
     public Employee() {
     }
 
-    public Employee(Long id, String firstName, String lastName, String email, String organization, String department, String position, String phone, Double salary, List<Project> projects) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.organization = organization;
-        this.department = department;
-        this.position = position;
-        this.phone = phone;
-        this.salary = salary;
+    public Employee(List<Project> projects, List<Job> jobs, Double salary, String phone, String position, String department, String organization, String email, String lastName, String firstName, Long id) {
         this.projects = projects;
+        this.jobs = jobs;
+        this.salary = salary;
+        this.phone = phone;
+        this.position = position;
+        this.department = department;
+        this.organization = organization;
+        this.email = email;
+        this.lastName = lastName;
+        this.firstName = firstName;
+        this.id = id;
     }
 
     public List<Project> getProjects() {
@@ -61,6 +62,14 @@ public class Employee {
 
     public void setProjects(List<Project> projects) {
         this.projects = projects;
+    }
+
+    public List<Job> getJobs() {
+        return jobs;
+    }
+
+    public void setJobs(List<Job> jobs) {
+        this.jobs = jobs;
     }
 
     public Double getSalary() {
