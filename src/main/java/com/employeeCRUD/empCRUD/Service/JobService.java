@@ -12,6 +12,7 @@ import java.util.List;
 public class JobService {
 
     JobDAOImpl jobImp;
+
     @Autowired
     public JobService(JobDAOImpl jobImp) {
         this.jobImp = jobImp;
@@ -20,20 +21,28 @@ public class JobService {
     public List<Job> findAll() {
         return jobImp.findAll();
     }
+
     public Job findById(int id) {
         return jobImp.findById(id);
     }
+
     @Transactional
     public Job save(Job job) {
         return jobImp.save(job);
     }
+
     @Transactional
     public void deleteById(int id) {
         jobImp.deleteById(id);
     }
+
     @Transactional
     public Job update(Job job) {
         return jobImp.update(job);
     }
 
+    @Transactional
+    public Job patchJob(int id, Job partialJob) {
+        return jobImp.patchJob(id, partialJob);
+    }
 }

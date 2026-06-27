@@ -1,13 +1,14 @@
 package com.employeeCRUD.empCRUD.DAO;
 
 import com.employeeCRUD.empCRUD.Entity.Job;
+import jakarta.transaction.Transactional;
 
 
 import java.util.List;
 
 public interface JobDAO {
 
-List<Job> findAll();
+    List<Job> findAll();
 
     Job findById(Integer id);
 
@@ -15,5 +16,7 @@ List<Job> findAll();
     void deleteById(Integer id);
     Job update(Job job);
 
+    @Transactional
+    Job patchJob(Integer id, Job partialJob);
 }
 

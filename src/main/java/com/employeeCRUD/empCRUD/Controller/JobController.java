@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 @RestController
 @RequestMapping("/api/job")
 public class JobController {
@@ -18,11 +19,13 @@ public class JobController {
     public JobController(JobService jobService) {
         this.jobService = jobService;
     }
+
     @GetMapping("/all")
     public ResponseEntity<ApiResponse<List<Job>>> getAllJobs() {
-        List<Job> list= jobService.findAll();
+        List<Job> list = jobService.findAll();
         return ResponseEntity.ok(new ApiResponse<>("success", list));
     }
+
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<Job>> getJobById(@PathVariable int id) {
         Job job = jobService.findById(id);
@@ -33,34 +36,40 @@ public class JobController {
             return ResponseEntity.notFound().build();
         }
     }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<Void>> deleteJob(@PathVariable int id) {
         jobService.deleteById(id);
         return ResponseEntity.status(204).body(new ApiResponse<>("Job deleted", null));
-
     }
+
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<Job>> updateJobs(@PathVariable int id, @RequestBody Job Job) {
+    public ResponseEntity<ApiResponse<Job>> updateJobs(@PathVariable int id, @RequestBody Job job) {
         Job proj = jobService.findById(id);
         if (proj != null) {
-            Job.setId(id);
-            Job updated = jobService.update(Job);
-
+            job.setId(id);
+            Job updated = jobService.update(job);
             return ResponseEntity.ok(
                     new ApiResponse<>("Job updated successfully", updated)
             );
         }
-        else  {
+        else {
             return ResponseEntity.notFound().build();
         }
     }
- 
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<ApiResponse<Job>> patchJob(@PathVariable int id, @RequestBody Job job) {
+        Job updated = jobService.patchJob(id, job);
+        if (updated == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(new ApiResponse<>("Job patched successfully", updated));
+    }
+
     @PostMapping("/create")
-    public ResponseEntity<ApiResponse<Job>> createJob(
-            @RequestBody Job job) {
-
+    public ResponseEntity<ApiResponse<Job>> createJob(@RequestBody Job job) {
         Job saved = jobService.save(job);
-
         return ResponseEntity.status(201)
                 .body(new ApiResponse<>("Job created", saved));
     }
