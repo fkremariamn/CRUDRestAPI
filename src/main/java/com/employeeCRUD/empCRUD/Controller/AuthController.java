@@ -30,20 +30,16 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> createAuthenticationToken(@RequestBody AuthRequest authRequest) {
-        try {
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            authRequest.getUsername(),
-                            authRequest.getPassword()
-                    )
-            );
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        authRequest.getUsername(),
+                        authRequest.getPassword()
+                )
+        );
 
-            final UserDetails userDetails = userDetailsService.loadUserByUsername(authRequest.getUsername());
-            final String jwt = jwtUtil.generateToken(userDetails.getUsername());
+        final UserDetails userDetails = userDetailsService.loadUserByUsername(authRequest.getUsername());
+        final String jwt = jwtUtil.generateToken(userDetails.getUsername());
 
-            return ResponseEntity.ok(new AuthResponse(jwt, userDetails.getUsername(), "Login successful"));
-        } catch (Exception e) {
-            return ResponseEntity.status(401).body(new AuthResponse(null, null, "Invalid credentials"));
-        }
+        return ResponseEntity.ok(new AuthResponse(jwt, userDetails.getUsername(), "Login successful"));
     }
 }

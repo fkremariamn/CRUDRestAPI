@@ -1,0 +1,134 @@
+-- ============================================
+-- 1. INSERT USERS (if not already exists)
+-- ============================================
+INSERT INTO users (username, password, enabled) VALUES 
+('fkre', '$2a$10$NkZqLqRQ3nKjXzVLxgKl0u9x8Xx9Xx9Xx9Xx9Xx9Xx9Xx9Xx9Xx9', true),
+('abebe', '$2a$10$MkZqLqRQ3nKjXzVLxgKl0u9x8Xx9Xx9Xx9Xx9Xx9Xx9Xx9Xx9Xx9', true),
+('alex', '$2a$10$OkZqLqRQ3nKjXzVLxgKl0u9x8Xx9Xx9Xx9Xx9Xx9Xx9Xx9Xx9Xx9', true)
+ON CONFLICT (username) DO NOTHING;
+
+-- ============================================
+-- 2. INSERT USER ROLES
+-- ============================================
+-- fkre: EMPLOYEE
+INSERT INTO user_roles (user_id, role) 
+SELECT id, 'EMPLOYEE' FROM users WHERE username = 'fkre' 
+ON CONFLICT DO NOTHING;
+
+-- abebe: EMPLOYEE, MANAGER
+INSERT INTO user_roles (user_id, role) 
+SELECT id, 'EMPLOYEE' FROM users WHERE username = 'abebe' 
+ON CONFLICT DO NOTHING;
+INSERT INTO user_roles (user_id, role) 
+SELECT id, 'MANAGER' FROM users WHERE username = 'abebe' 
+ON CONFLICT DO NOTHING;
+
+-- alex: EMPLOYEE, MANAGER, ADMIN
+INSERT INTO user_roles (user_id, role) 
+SELECT id, 'EMPLOYEE' FROM users WHERE username = 'alex' 
+ON CONFLICT DO NOTHING;
+INSERT INTO user_roles (user_id, role) 
+SELECT id, 'MANAGER' FROM users WHERE username = 'alex' 
+ON CONFLICT DO NOTHING;
+INSERT INTO user_roles (user_id, role) 
+SELECT id, 'ADMIN' FROM users WHERE username = 'alex' 
+ON CONFLICT DO NOTHING;
+
+-- ============================================
+-- 3. INSERT EMPLOYEES
+-- ============================================
+INSERT INTO emp_table (first_name, last_name, email, organization, department, position, phone, salary) VALUES
+('Fkremariam', 'Nigatu', 'fkre.nigatu@gmail.com', 'Nib Bank', 'IT', 'Senior Software Engineer', '0911223344', 850000.00),
+('Abebe', 'Kebede', 'abebe.kebede@gmail.com', 'Commercial Bank', 'Finance', 'Finance Manager', '0911223355', 950000.00),
+('Alex', 'Smith', 'alex.smith@gmail.com', 'Dashen Bank', 'Technology', 'CTO', '0911223366', 1200000.00),
+('Tigist', 'Haile', 'tigist.haile@gmail.com', 'Ethio Telecom', 'Engineering', 'Network Engineer', '0911223377', 750000.00),
+('Dawit', 'Mekonnen', 'dawit.mekonnen@gmail.com', 'Ministry of Health', 'IT', 'System Administrator', '0911223388', 650000.00),
+('Sara', 'Tesfaye', 'sara.tesfaye@gmail.com', 'Ethiopian Airlines', 'HR', 'HR Manager', '0911223399', 700000.00),
+('Yonas', 'Alemayehu', 'yonas.alemayehu@gmail.com', 'Zemen Bank', 'IT', 'DevOps Engineer', '0911223400', 800000.00),
+('Meron', 'Girma', 'meron.girma@gmail.com', 'Awash Bank', 'Marketing', 'Marketing Lead', '0911223411', 680000.00),
+('Henok', 'Tekle', 'henok.tekle@gmail.com', 'Eskindir Construction', 'IT', 'Software Developer', '0911223422', 550000.00),
+('Betty', 'Hailu', 'betty.hailu@gmail.com', 'NOC Ethiopia', 'Operations', 'Operations Manager', '0911223433', 720000.00);
+
+-- ============================================
+-- 4. INSERT JOBS (with employee references)
+-- ============================================
+INSERT INTO job (title, description, min_salary, employee_id) VALUES
+('Software Engineer', 'Develop and maintain Java Spring Boot applications', 60000, 1),
+('Senior Developer', 'Lead development team and architect solutions', 80000, 1),
+('Finance Manager', 'Manage financial operations and reporting', 75000, 2),
+('CTO', 'Oversee technology strategy and innovation', 100000, 3),
+('Network Engineer', 'Design and maintain network infrastructure', 65000, 4),
+('System Administrator', 'Manage servers and IT infrastructure', 55000, 5),
+('HR Manager', 'Manage human resources and recruitment', 60000, 6),
+('DevOps Engineer', 'CI/CD pipeline management and deployment', 70000, 7),
+('Marketing Lead', 'Lead marketing campaigns and branding', 58000, 8),
+('Software Developer', 'Develop web applications and APIs', 45000, 9),
+('Operations Manager', 'Manage daily operations and logistics', 62000, 10);
+
+-- ============================================
+-- 5. INSERT PROJECTS (with employee references)
+-- ============================================
+INSERT INTO project_table (project_name, project_description, budget, employee_id) VALUES
+('Employee Management System', 'Full-stack CRUD application with Spring Boot and React', 150000.00, 1),
+('Banking Core System', 'Core banking system migration and modernization', 250000.00, 2),
+('Mobile Banking App', 'Mobile banking application development', 200000.00, 3),
+('Network Infrastructure Upgrade', 'Upgrade network infrastructure across all branches', 180000.00, 4),
+('HR Management System', 'Human resource management system implementation', 120000.00, 5),
+('Digital Marketing Platform', 'Digital marketing and analytics platform', 160000.00, 6),
+('DevOps Automation', 'Implement CI/CD pipelines and automation', 140000.00, 7),
+('E-commerce Platform', 'Online shopping and payment platform', 220000.00, 8),
+('Inventory Management', 'Inventory tracking and management system', 110000.00, 9),
+('Operations Dashboard', 'Real-time operations monitoring dashboard', 130000.00, 10);
+
+-- ============================================
+-- 6. ADD MORE PROJECTS FOR EMPLOYEE 1 (Fkremariam)
+-- ============================================
+INSERT INTO project_table (project_name, project_description, budget, employee_id) VALUES
+('API Gateway Implementation', 'Microservices API gateway and security', 95000.00, 1),
+('Data Analytics Dashboard', 'Real-time data analytics and visualization', 85000.00, 1);
+
+-- ============================================
+-- 7. ADD MORE JOBS FOR EMPLOYEE 1 (Fkremariam)
+-- ============================================
+INSERT INTO job (title, description, min_salary, employee_id) VALUES
+('Tech Lead', 'Lead technical decisions and team mentoring', 90000, 1),
+('Cloud Architect', 'Design cloud infrastructure on AWS/Azure', 85000, 1);
+
+-- ============================================
+-- 8. VERIFY ALL DATA
+-- ============================================
+-- View all users with roles
+SELECT u.id, u.username, u.enabled, 
+       STRING_AGG(r.role, ', ') AS roles
+FROM users u
+LEFT JOIN user_roles r ON u.id = r.user_id
+GROUP BY u.id, u.username, u.enabled
+ORDER BY u.id;
+
+-- View all employees
+SELECT * FROM emp_table ORDER BY id;
+
+-- View all jobs with employee names
+SELECT j.id, j.title, j.description, j.min_salary, 
+       e.first_name, e.last_name
+FROM job j
+LEFT JOIN emp_table e ON j.employee_id = e.id
+ORDER BY j.id;
+
+-- View all projects with employee names
+SELECT p.id, p.project_name, p.project_description, p.budget,
+       e.first_name, e.last_name
+FROM project_table p
+LEFT JOIN emp_table e ON p.employee_id = e.id
+ORDER BY p.id;
+
+-- Count summary
+SELECT 'Users' AS Table_Name, COUNT(*) AS Record_Count FROM users
+UNION ALL
+SELECT 'User Roles', COUNT(*) FROM user_roles
+UNION ALL
+SELECT 'Employees', COUNT(*) FROM emp_table
+UNION ALL
+SELECT 'Jobs', COUNT(*) FROM job
+UNION ALL
+SELECT 'Projects', COUNT(*) FROM project_table;

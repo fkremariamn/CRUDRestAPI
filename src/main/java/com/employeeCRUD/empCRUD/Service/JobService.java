@@ -2,6 +2,7 @@ package com.employeeCRUD.empCRUD.Service;
 
 import com.employeeCRUD.empCRUD.DAO.JobDAOImpl;
 import com.employeeCRUD.empCRUD.Entity.Job;
+import com.employeeCRUD.empCRUD.Exception.ResourceNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,7 +24,15 @@ public class JobService {
     }
 
     public Job findById(int id) {
-        return jobImp.findById(id);
+
+        Job job = jobImp.findById(id);
+
+        if (job == null) {
+            throw new ResourceNotFoundException(
+                    "Job with ID " + id + " not found");
+        }
+
+        return job;
     }
 
     @Transactional
@@ -43,6 +52,14 @@ public class JobService {
 
     @Transactional
     public Job patchJob(int id, Job partialJob) {
+
+        Job existing = jobImp.findById(id);
+
+        if (existing == null) {
+            throw new ResourceNotFoundException(
+                    "Job with ID " + id + " not found");
+        }
+
         return jobImp.patchJob(id, partialJob);
     }
 }
